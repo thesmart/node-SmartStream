@@ -1,16 +1,16 @@
 {
-  "name": "base-stream",
-  "version": "0.1.4",
-  "description": "Middleware for Node.js Streams.  Creating your own Stream is easy!",
+  "name": "smart-stream",
+  "version": "0.1.0",
+  "description": "A library and middleware for Node.js Streams. Implementing your own Stream is easy!",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/thesmart/node-BaseStream.git"
+    "url": "git://github.com/thesmart/node-SmartStream.git"
   },
   "keywords": [
     "Stream",
-    "base-stream",
-    "base stream",
+    "smart-stream",
+    "smart stream",
     "middleware",
     "ReadStream",
     "WriteStream"
