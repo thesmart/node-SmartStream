@@ -1,0 +1,23 @@
+{
+  "name": "base-stream",
+  "version": "0.1.4",
+  "description": "Middleware for Node.js Streams.  Creating your own Stream is easy!",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thesmart/node-BaseStream.git"
+  },
+  "keywords": [
+    "Stream",
+    "base-stream",
+    "base stream",
+    "middleware",
+    "ReadStream",
+    "WriteStream"
+  ],
+  "author": "John Smart <smart@telly.com> (https://github.com/thesmart)",
+  "license": "BSD",
+  "dependencies": {
+    "underscore": "1.4.2"
+  }
+}
