@@ -1,3 +1,4 @@
 module.exports = {
-	SmartStream: require('./lib/smart_stream.js')
+	SmartStream: require('./lib/smart_stream.js'),
+	AccStream: require('./lib/acc_stream.js')
 };
