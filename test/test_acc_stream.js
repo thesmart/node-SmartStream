@@ -56,7 +56,7 @@ function flushData(pendingCallbacks) {
 
 describe('AccStream', function() {
 	it('write', function(done) {
-		var p = new AccStream(1, 'p');
+		var p = new AccStream('p', 1);
 		var c = new SmartStream('c');
 		p.pipe(c);
 
@@ -85,7 +85,7 @@ describe('AccStream', function() {
 	});
 
 	it('middleware', function(done) {
-		var p = new AccStream(1, 'p');
+		var p = new AccStream('p', 1);
 		var c = new SmartStream('c');
 		p.pipe(c);
 
@@ -130,7 +130,7 @@ describe('AccStream', function() {
 	});
 
 	it('pause', function(done) {
-		var p = new AccStream(2, 'p');
+		var p = new AccStream('p', 2);
 		var c = new SmartStream('c', 1);
 		p.pipe(c);
 
@@ -154,7 +154,7 @@ describe('AccStream', function() {
 
 	it('resume', function(done) {
 		var p = new SmartStream('p');
-		var m = new AccStream(2, 'm');
+		var m = new AccStream('m', 2);
 		var c = new SmartStream('c', 2);
 		p.pipe(m).pipe(c);
 
@@ -213,7 +213,7 @@ describe('AccStream', function() {
 
 	it('end', function(done) {
 		var p = new SmartStream('p');
-		var m = new AccStream(2, 'm');
+		var m = new AccStream('m', 2);
 		var c = new SmartStream('c', 1);
 		p.pipe(m).pipe(c);
 
