@@ -1,7 +1,7 @@
 node-SmartStream
 ===================
 
-Middleware for Node.js Streams.  Creating your own Stream is easy!
+Middleware for Node.js Streams.  Creating your own Stream pipeline is easy!
 
 ```
 npm install smart-stream
@@ -87,3 +87,58 @@ cursor.stream.pipe(accumulatorStream);
 ...
 21
 ```
+
+## SmartStream internals
+
+Similar to unix piping, Streams can be piped together to form a pipeline:
+
+```
+readableStream.pipe(writableStreamA).pipe(writableStreamB);
+readableStream.start();
+```
+
+This works via a combination of pub/sub and functional calls:
+
+*Readable Stream    =>    Writable Stream*
+event 'data'    =>    write(object)
+event 'end'    =>    end()
+event 'drain'    =>    resume()
+event 'pause'    =>    pause()
+event 'close'    =>    destroy()
+event 'error'    =>    event 'error'
+
+### Writable Streams
+
+Methods: write, end, destroy
+Events: drain, error, close, pause
+
+* Methods:
+ 1. write(object) - called from an upstream Stream (or functionally) when data is ready for this node in the Stream pipeline. Increments "countUpstream" and the "countPending" count.
+ 1. end() - called from an upstream Stream when it has no data left to write
+ 1. destroy() - called to destroy the Stream node
+* Events:
+ 1. event 'drain' - emitted from a Stream any time it is no longer busy, meaning its "countPending" falls to safe levels.  This allows any paused up-stream Stream to resume writing data.
+ 1. event 'error' - the Stream has encountered an error. This error will ripple through the pipeline.
+ 1. event 'close' - emitted by the last writeable stream in a pipeline when it is closed and should not be written to again ever.
+ 1. event 'pause' - emitted from a writable Stream when it is busy processing pending data, and needs up-stream to pause writing data.  Does not guarantee that data will not be written, more of a "gentleman's" agreement.
+
+### Readable Streams
+
+Methods: pause, resume, end, destroy
+Events: data, end, error
+
+* Methods:
+ 1. pause() - called to pause downstream production
+ 1. resume() - called to resume downstream production
+ 1. end() - called when the upstream Stream has no more data to write downstream
+ 1. destroy() - called to destroy the Stream node
+* Events:
+ 1. event 'data' - emitted with data read for downstream consumption
+ 1. event 'end' - emitted after end() is called, when there is no more data to emit
+ 1. event 'error' - the Stream has encountered an error. This error will ripple through the pipeline.
+
+## Further reading
+
+Here is [a simple blog article about Streams](http://maxogden.com/node-streams).
+
+Here is a [SlideShare discussing Streams](http://www.slideshare.net/atcrabtree/functional-programming-with-streams-in-nodejs) in NodeJs
