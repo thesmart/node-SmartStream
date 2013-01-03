@@ -100,12 +100,19 @@ readableStream.start();
 This works via a combination of pub/sub and functional calls:
 
 *Readable Stream    =>    Writable Stream*
+
 event 'data'    =>    write(object)
+
 event 'end'    =>    end()
+
 event 'drain'    =>    resume()
+
 event 'pause'    =>    pause()
+
 event 'close'    =>    destroy()
+
 event 'error'    =>    event 'error'
+
 
 ### Writable Streams
 
