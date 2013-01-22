@@ -93,7 +93,8 @@ describe('AccStream', function() {
 			// modify downstream
 			assert.equal(c, this);
 			assert.equal(1, this.countPending);
-			assert.equal(1, p.countPending);
+			assert.equal(1, p.countDownstream);
+			assert.equal(0, p.countPending);
 			cb(null, data + ' goodbye moon.');
 		});
 
