@@ -246,4 +246,38 @@ describe('SmartStream', function() {
 			}, 10);
 		}, 10);
 	});
+
+	it('errors sync', function(done) {
+		var p = new SmartStream('p');
+		var c = new SmartStream('c');
+		p.pipe(c);
+
+		c.setMiddlewareSync(function() {
+			throw new Error('middleware');
+		});
+
+		c.on('error', function() {
+			assert.equal(0, c.countPending);
+			done();
+		});
+
+		p.write('a');
+	});
+
+	it('errors async', function(done) {
+		var p = new SmartStream('p');
+		var c = new SmartStream('c');
+		p.pipe(c);
+
+		c.setMiddleware(function(data, next) {
+			throw new Error('middleware');
+		});
+
+		c.on('error', function() {
+			assert.equal(0, c.countPending);
+			done();
+		});
+
+		p.write('a');
+	});
 });
