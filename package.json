@@ -18,6 +18,7 @@
   "author": "John Smart <smart@telly.com> (https://github.com/thesmart)",
   "license": "BSD",
   "dependencies": {
-    "underscore": "1.4.2"
+    "underscore": "1.4.2",
+	"mocha":"1.8.1"
   }
 }
