@@ -84,9 +84,89 @@ describe('SmartStream', function() {
 		p.write('hello world!');
 	});
 
+	it('write with preload', function(done) {
+		var p = new SmartStream('p');
+		var c = new SmartStream('c');
+		c.setPreloadMiddleware(function(done) {
+			setTimeout(done, 10);
+		});
+		p.pipe(c);
+
+		var eventsSeen = watchEvents([p, c], ['data','drain','empty']);
+
+		setTimeout(function() {
+			assert.equal(1, p.countUpstream);
+			assert.equal(0, p.countPending);
+			assert.equal(1, p.countDownstream);
+
+			assert.equal(1, c.countUpstream);
+			assert.equal(0, c.countPending);
+			assert.equal(1, c.countDownstream);
+
+			assertSeen(eventsSeen, p, 'data');
+			assertSeen(eventsSeen, c, 'data');
+			assertSeen(eventsSeen, p, 'drain');
+			assertSeen(eventsSeen, c, 'drain');
+			assertSeen(eventsSeen, p, 'empty');
+			assertSeen(eventsSeen, c, 'empty');
+
+			done();
+		}, 50);
+
+		p.write('hello world!');
+	});
+
 	it('middleware', function(done) {
 		var p = new SmartStream('p');
 		var c = new SmartStream('c');
+		p.pipe(c);
+
+		c.setMiddleware(function(data, cb) {
+			// modify downstream
+			assert.equal(c, this);
+			assert.equal(1, this.countPending);
+			assert.equal(0, p.countPending);
+			cb(null, data + ' goodbye moon.');
+		});
+
+		var eventsSeen = watchEvents([p, c], ['data','drain','empty']);
+
+		var wasDataModified = false;
+		c.on('data', function(data) {
+			assert.equal('hello world! goodbye moon.', data);
+			wasDataModified = true;
+		});
+
+		setTimeout(function() {
+			assert.equal(1, p.countUpstream);
+			assert.equal(0, p.countPending);
+			assert.equal(1, p.countDownstream);
+
+			assert.equal(1, c.countUpstream);
+			assert.equal(0, c.countPending);
+			assert.equal(1, c.countDownstream);
+
+			assertSeen(eventsSeen, p, 'data');
+			assertSeen(eventsSeen, c, 'data');
+			assertSeen(eventsSeen, p, 'drain');
+			assertSeen(eventsSeen, c, 'drain');
+			assertSeen(eventsSeen, p, 'empty');
+			assertSeen(eventsSeen, c, 'empty');
+
+			assert.ok(wasDataModified);
+
+			done();
+		}, 10);
+
+		p.write('hello world!');
+	});
+
+	it('middleware with preload', function(done) {
+		var p = new SmartStream('p');
+		var c = new SmartStream('c');
+		c.setPreloadMiddleware(function(done) {
+			setTimeout(done, 2);
+		});
 		p.pipe(c);
 
 		c.setMiddleware(function(data, cb) {
