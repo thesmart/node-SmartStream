@@ -25,7 +25,6 @@ lowerCaseStream.setMiddleware(function(data, cb) {
 	// NOTE: set result to undefined to prevent it from moving downstream
 });
 
-// lay some pipe, Tex!
 readStream
 	.pipe(lowerCaseStream)
 	.pipe(writeStream);
